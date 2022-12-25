@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Header from './components/Header';
 import Search from './components/Search';
 import ImageCard from './components/ImageCard';
+import Welcome from './components/Welcome';
 import { Container, Row, Col } from 'react-bootstrap';
 
 const UNSPLASH_KEY = process.env.REACT_APP_UNSPLASH_API_KEY;
@@ -10,6 +11,7 @@ const UNSPLASH_KEY = process.env.REACT_APP_UNSPLASH_API_KEY;
 function App() {
   const [word, setWord] = useState('');
   const [images, setImages] = useState([]);
+  const [index, setIndex] = useState(0);
 
   function handleSearchSubmit(e) {
     e.preventDefault();
@@ -30,18 +32,27 @@ function App() {
     setImages(images.filter((image) => image.id !== id));
   }
 
+  function handleSelect(selectedIndex, e) {
+    setIndex(selectedIndex);
+  }
+
   return (
     <div className="App">
       <Header title="Art Gallery" />
       <Search word={word} setWord={setWord} handleSubmit={handleSearchSubmit} />
       <Container className="mt-4">
-        <Row xs={1} md={2} lg={3}>
-          {images.map((image, i) => (
-            <Col key={i} className="pb-3">
-              <ImageCard image={image} deleteImage={handleDeleteImage} />
-            </Col>
-          ))}
-        </Row>
+        {images.length ? (
+          <Row xs={1} md={2} lg={3}>
+            {images.map((image, i) => (
+              // console.log(image);
+              <Col key={i} className="pb-3">
+                <ImageCard image={image} deleteImage={handleDeleteImage} />
+              </Col>
+            ))}
+          </Row>
+        ) : (
+          <Welcome index={index} onSelect={handleSelect} />
+        )}
       </Container>
     </div>
   );
