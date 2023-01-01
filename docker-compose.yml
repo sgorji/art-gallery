@@ -10,7 +10,7 @@ services:
       - /app/node_modules
       - ./frontend:/app
     environment:
-      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
 
   api:
     restart: always

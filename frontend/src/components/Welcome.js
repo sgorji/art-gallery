@@ -3,12 +3,12 @@ import { Button } from 'react-bootstrap';
 
 function Welcome({ index, handleSelect }) {
   return (
-    <div class="bg-light p-5 rounded-lg m-3">
-      <h1 class="display-4">Art Gallery</h1>
-      <p class="lead">
+    <div className="bg-light p-5 rounded-lg m-3">
+      <h1 className="display-4">Art Gallery</h1>
+      <p className="lead">
         A simple application to search for images by keyword using Unsplash API.
       </p>
-      <hr class="my-4" />
+      <hr className="my-4" />
       <p>
         Curious about{' '}
         <em>
