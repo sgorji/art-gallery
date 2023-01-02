@@ -53,14 +53,20 @@ function App() {
           )
         );
       }
-      console.log(resp.data);
     } catch (error) {
       console.log(error);
     }
   }
 
-  function handleDeleteImage(id) {
-    setImages(images.filter((image) => image.id !== id));
+  async function handleDeleteImage(id) {
+    try {
+      const resp = await axios.delete(`${API_URL}/images/${id}`);
+      if (resp.data?.deleted_id) {
+        setImages(images.filter((image) => image.id !== id));
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   function handleSelect(selectedIndex, e) {
