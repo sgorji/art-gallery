@@ -4,6 +4,7 @@ import Header from './components/Header';
 import Search from './components/Search';
 import ImageCard from './components/ImageCard';
 import Welcome from './components/Welcome';
+import Loader from './components/Loader';
 import { Container, Row, Col } from 'react-bootstrap';
 import axios from 'axios';
 
@@ -13,11 +14,13 @@ function App() {
   const [word, setWord] = useState('');
   const [images, setImages] = useState([]);
   const [index, setIndex] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   async function getSavedImages() {
     try {
       const resp = await axios.get(`${API_URL}/images`);
       setImages(resp.data || []);
+      setLoading(false);
     } catch (error) {
       console.log(error);
     }
@@ -76,24 +79,34 @@ function App() {
   return (
     <div className="App">
       <Header title="Art Gallery" />
-      <Search word={word} setWord={setWord} handleSubmit={handleSearchSubmit} />
-      <Container className="mt-4">
-        {images.length ? (
-          <Row xs={1} md={2} lg={3}>
-            {images.map((image, i) => (
-              <Col key={i} className="pb-3">
-                <ImageCard
-                  image={image}
-                  saveImage={handleSaveImage}
-                  deleteImage={handleDeleteImage}
-                />
-              </Col>
-            ))}
-          </Row>
-        ) : (
-          <Welcome index={index} onSelect={handleSelect} />
-        )}
-      </Container>
+      {loading ? (
+        <Loader loading={loading} setLoading={setLoading} />
+      ) : (
+        <>
+          <Search
+            word={word}
+            setWord={setWord}
+            handleSubmit={handleSearchSubmit}
+          />
+          <Container className="mt-4">
+            {images.length ? (
+              <Row xs={1} md={2} lg={3}>
+                {images.map((image, i) => (
+                  <Col key={i} className="pb-3">
+                    <ImageCard
+                      image={image}
+                      saveImage={handleSaveImage}
+                      deleteImage={handleDeleteImage}
+                    />
+                  </Col>
+                ))}
+              </Row>
+            ) : (
+              <Welcome index={index} onSelect={handleSelect} />
+            )}
+          </Container>
+        </>
+      )}
     </div>
   );
 }
