@@ -40,6 +40,25 @@ function App() {
     setWord('');
   }
 
+  async function handleSaveImage(id) {
+    const imageToSave = images.find((image) => image.id === id);
+    imageToSave.saved = true;
+
+    try {
+      const resp = await axios.post(`${API_URL}/images`, imageToSave);
+      if (resp.data?.inserted_id) {
+        setImages(
+          images.map((image) =>
+            image.id === id ? { ...image, saved: true } : image
+          )
+        );
+      }
+      console.log(resp.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   function handleDeleteImage(id) {
     setImages(images.filter((image) => image.id !== id));
   }
@@ -56,9 +75,12 @@ function App() {
         {images.length ? (
           <Row xs={1} md={2} lg={3}>
             {images.map((image, i) => (
-              // console.log(image);
               <Col key={i} className="pb-3">
-                <ImageCard image={image} deleteImage={handleDeleteImage} />
+                <ImageCard
+                  image={image}
+                  saveImage={handleSaveImage}
+                  deleteImage={handleDeleteImage}
+                />
               </Col>
             ))}
           </Row>

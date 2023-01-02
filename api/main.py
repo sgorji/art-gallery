@@ -28,12 +28,8 @@ app.config["DEBUG"] = DEBUG
 def new_image():
     word = request.args.get("query")
     headers = {"Accept-Version": "v1", "Authorization": "Client-ID " + UNSPLASH_KEY}
-    headers = {"Accept-Version": "v1", "Authorization": "Client-ID " + UNSPLASH_KEY}
     params = {"query": word}
     response = requests.get(url=UNSPLASH_URL, headers=headers, params=params, timeout=1)
-
-    response = requests.get(url=UNSPLASH_URL, headers=headers, params=params, timeout=1)
-
     data = response.json()
     return data
 
