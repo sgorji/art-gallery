@@ -6,6 +6,9 @@ import ImageCard from './components/ImageCard';
 import Welcome from './components/Welcome';
 import Loader from './components/Loader';
 import { Container, Row, Col } from 'react-bootstrap';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import axios from 'axios';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
@@ -21,7 +24,12 @@ function App() {
       const resp = await axios.get(`${API_URL}/images`);
       setImages(resp.data || []);
       setLoading(false);
+      toast.success('Retrieved saved images', {
+        position: 'bottom-right',
+        progress: undefined,
+      });
     } catch (error) {
+      toast.error(error.message);
       console.log(error);
     }
   }
@@ -36,7 +44,12 @@ function App() {
     try {
       const resp = await axios.get(`${API_URL}/new-image?query=${word}`);
       setImages([{ ...resp.data, title: word }, ...images]);
+      toast.info(`New image for ${word.toUpperCase()}`, {
+        position: 'bottom-right',
+        progress: undefined,
+      });
     } catch (error) {
+      toast.error(error.message);
       console.log(error);
     }
 
@@ -55,19 +68,24 @@ function App() {
             image.id === id ? { ...image, saved: true } : image
           )
         );
+        toast.info(`Image ${imageToSave.title.toUpperCase()} was saved`);
       }
     } catch (error) {
+      toast.error(error.message);
       console.log(error);
     }
   }
 
   async function handleDeleteImage(id) {
+    const imageToDelete = images.find((image) => image.id === id);
     try {
       const resp = await axios.delete(`${API_URL}/images/${id}`);
       if (resp.data?.deleted_id) {
         setImages(images.filter((image) => image.id !== id));
+        toast.warn(`Image ${imageToDelete.title.toUpperCase()} was deleted`);
       }
     } catch (error) {
+      toast.error(error.message);
       console.log(error);
     }
   }
@@ -107,6 +125,18 @@ function App() {
           </Container>
         </>
       )}
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </div>
   );
 }
